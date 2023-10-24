@@ -104,7 +104,6 @@ function quark_number_free_semianalytic_local(n, w, M, μ, N)
         Ep = particle_energy_free(p,w,M)
         if Ep < μ
             kf += +1
-            #res += (1+ sin(p)*sin(p*(4n-1)))/2
             res += -M*(cos(p)*cos(p*(4n-1)))/(2Ep)
         end
         res += M*(cos(p)*cos(p*(4n-1)))/(2Ep)
@@ -223,7 +222,6 @@ function quark_distribution_base_free(w, M, μ, N; cutoff=0)
     n1seq = Int.(floor.((yseq.+L.+1)./2))
     n2seq = Int.(floor.((L.-yseq.+1)./2))
     prop_free = propagator_greater_free.(n1seq, 1, n2seq, 1, w, M, μ, N)+ propagator_greater_free.(n1seq, 2, n2seq, 2, w, M, μ, N)
-    prop_free = prop_free./(exp.(1*(yseq.^2 .-400) ) .+1)
     return yseq, prop_free
 end
 
@@ -231,12 +229,6 @@ end
 function quark_distribution_free(w, M, μ, N; cutoff=0)
     res = 0
     L = Int(N/2)    
-#    L = Int(N/2) - cutoff
-#    yseq = -L+1:L-1
-#    pseq = (2π/(2L-1)).*yseq
-#    n1seq = Int.(floor.((yseq.+L.+1)./2))
-#    n2seq = Int.(floor.((L.-yseq.+1)./2))
-#    prop_free = propagator_greater_free.(n1seq, 1, n2seq, 1, w, M, μ, N)+ propagator_greater_free.(n1seq, 2, n2seq, 2, w, M, μ, N)
     yseq, prop_free = quark_distribution_base_free(w, M, μ, N; cutoff)
     pseq = (2π/(2L-1)).*yseq
 fourier_kernel = [exp(im*p*y) for p in pseq, y in yseq ]
